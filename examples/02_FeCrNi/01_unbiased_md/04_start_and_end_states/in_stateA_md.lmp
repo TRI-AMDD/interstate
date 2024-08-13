@@ -1,0 +1,41 @@
+#--------------------------- Simulation variables -----------------------------#
+  variable          t    equal 10000  # Simulation time [ts].
+  variable          dt   equal 0.001   # Timestep [ps].
+  variable          dt_o equal 100     # Thermo/dump output stride [ts].
+  variable          dt_d equal 500    # Dump output stride [ts].
+  variable          P    equal 0       # System pressure [bars].
+  variable          damp equal 1.0     # Thermostat/barostat damping [ps].
+#------------------------------------------------------------------------------#
+
+#---------------------------- Atomic setup ------------------------------------#
+  units             metal
+  timestep          ${dt}
+
+  # Create atoms.
+  read_restart      ${root}/restart/${T}K.restart
+  reset_timestep    0
+
+  # Interatomic potential information.
+  pair_style       eam/alloy
+  pair_coeff       * * ${potentials_dir}/FeCrNi.eam.alloy Fe Cr Ni
+  neigh_modify     delay 0
+#------------------------------------------------------------------------------#
+
+
+#--------------------------- Output setup -------------------------------------#
+  thermo_style      custom step temp press pe
+
+  # Thermo information.
+  fix               f1 all print ${dt_o} &
+                    "$(step) $(temp) $(pxx) $(pyy) $(pzz) $(vol/atoms)" &
+                    title "# timestep T [K] Pxx Pyy Pzz [bar] v [A^3/atom]" &
+                    screen no file ${root}/thermo/thermo_${T}K.dat
+
+  dump              d1 all custom ${dt_d} ${root}/snapshot/snapshots_${T}K.dump id type x y z
+#------------------------------------------------------------------------------#
+
+
+#----------------------------- Run simulation ---------------------------------#
+  fix               f3 all npt temp ${T} ${T} ${damp} iso ${P} ${P} ${damp}
+  run               ${t}
+#------------------------------------------------------------------------------#

@@ -1,0 +1,59 @@
+#------------------------ Simulation input variables --------------------------#
+  variable         t      equal 10000 # Simulation time [ts].
+  variable         dt     equal 0.001 # Timestep [ps].
+  variable         dt_t   equal 1000  # Thermo information stride [ts].
+  variable         dt_o   equal 100   # Fix print output stride [ts].
+  variable         dt_d   equal 500   # Dump output stride [ts].
+  variable         Tstart equal ${T}   # Simulation starting temperature [K]
+  variable         Tstop  equal ${T}   # Simulation stop temperature [K]
+  variable         Tdamp  equal 0.1   # Temperature damping parameter [ps]
+  variable         Pstart equal 0     # Simulation starting pressure [bars]
+  variable         Pstop  equal 0     # Simulation stop pressure [bars]
+  variable         Pdamp  equal 1     # Pressure damping parameter [ps]
+  variable         n      equal 10 #5     # System size.
+  variable          r_Ni   equal $(1/3)  # Ratio of Ni atoms
+  variable          r_Co   equal $(1/3)  # Ratio of Co atoms
+  variable          r_Cr   equal 1-v_r_Ni-v_r_Co  # Ratio of Cr atoms
+  # Initalizes random number generator.
+  variable         rnd equal round(random(1,9999,$(v_RANDOM+1)))
+#------------------------------------------------------------------------------#
+#---------------------------- Atomic setup ------------------------------------#
+  units            metal
+  boundary         p p p
+  timestep         ${dt}
+  # Create atoms.
+  lattice          fcc ${a}
+  region           sim_box block 0 ${n} 0 ${n} 0 ${n}
+  create_box       3 sim_box
+  create_atoms     1 box
+  # Randomly assign atom types
+  set               type 1 type/ratio 2 $(v_r_Co+v_r_Cr) ${rnd}
+  set               type 2 type/ratio 3 $(v_r_Cr/(v_r_Co+v_r_Cr)) ${rnd}
+  
+# Interatomic potential information.
+  pair_style       eam/alloy
+  pair_coeff       * * ${potentials_dir}/FeCrNi.eam.alloy Fe Cr Ni
+  neigh_modify     delay 0
+#------------------------------------------------------------------------------#
+#--------------------------- Output setup -------------------------------------#
+  # Output thermodynamic information to screen and/or log file.
+  thermo_style     custom step temp press pe
+  thermo           ${dt_t}
+
+  # Output thermodynamic information to an output file (for post-processing).
+  fix               f1 all print ${dt_o} &
+                    "$(step) $(temp) $(press) $(pe/atoms) $(lx/v_n) $(ly/v_n) $(lz/v_n)" &
+                    title " # timestep | T [K] | P [bar] | pe [eV/atom] | xlattice [Angstrom] | ylattice [Angstrom] | zlattice [Angstrom]" &
+                    screen no file ${root}/thermo/thermo_${Tstart}K.dat
+
+# Print system snapshot.
+  dump              d1 all custom ${dt_d} ${root}/snapshot/snapshots_${Tstart}K.dump id type x y z
+#------------------------------------------------------------------------------#
+
+#----------------------------- Run simulation ---------------------------------#
+  # Initialize the atom velocities randomly at temperature T.
+  velocity         all create ${Tstart} ${rnd} dist gaussian rot yes
+  # Run MD simulation using NPT ensemble.
+  fix              f2 all npt temp ${Tstart} ${Tstop} ${Tdamp} iso ${Pstart} ${Pstop} ${Pdamp}
+  run              ${t}
+#------------------------------------------------------------------------------#
