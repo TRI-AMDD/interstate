@@ -16,7 +16,7 @@ cd interstate
 pip install -e .
 ```
 
-Alternary, connect to the EC2 instance named **Killian_GPU**, and do: 
+Alternatively, connect to the EC2 instance named **Killian_GPU**, and do: 
 ```bash 
 cd /home/ubuntu/ksheriff/PACKAGES/interstate
 git pull
