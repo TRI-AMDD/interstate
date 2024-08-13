@@ -37,7 +37,7 @@ If any issues, feel free to contact me at:
 ```
 Killian Sheriff
 ksheriff at mit dot edu
-```.
+```
 
 ## Thank you
 Big thanks to Steven Torrisi and Amalie Trewartha for mentoring me over those 3 months at TRI! It was super fun working all together! :) 
