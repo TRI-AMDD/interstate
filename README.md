@@ -16,11 +16,6 @@ cd interstate
 pip install -e .
 ```
 
-Alternatively, connect to the EC2 instance named **Killian_GPU**, and do: 
-```bash 
-cd /home/ubuntu/ksheriff/PACKAGES/interstate
-git pull
-```
 ## Example of usage
 
 The scripts and data necessary to reproduce the figures of the paper can be found in the [examples/](examples/) folder.
@@ -29,15 +24,21 @@ The scripts and data necessary to reproduce the figures of the paper can be foun
 If you use this repository in your work, please cite:
 
 ```
-@article{}
-```
+@inproceedings{
+sheriff2024simultaneous,
+title={Simultaneous Discovery of Reaction Coordinates and Committor Functions Using Equivariant Graph Neural Networks},
+author={Killian Sheriff and Rodrigo Freitas and Amalie Trewartha and Steven Torrisi},
+booktitle={AI for Accelerated Materials Design - NeurIPS 2024},
+year={2024},
+url={https://openreview.net/forum?id=NX2ROvVb2Y}
+}```
 
 ## Contact
-If any issues, feel free to contact me at:
+If any issues, feel free to contact:
 ```
 Killian Sheriff
 ksheriff at mit dot edu
 ```
 
-## Thank you
-Big thanks to Steven Torrisi and Amalie Trewartha for mentoring me over those 3 months at TRI! It was super fun working all together! :) 
+## Acknowledgements
+We acknowledge Steven Torrisi and Amalie Trewartha for support and mentorship as intern advisors at TRI.
