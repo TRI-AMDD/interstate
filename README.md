@@ -31,7 +31,8 @@ author={Killian Sheriff and Rodrigo Freitas and Amalie Trewartha and Steven Torr
 booktitle={AI for Accelerated Materials Design - NeurIPS 2024},
 year={2024},
 url={https://openreview.net/forum?id=NX2ROvVb2Y}
-}```
+}
+```
 
 ## Contact
 If any issues, feel free to contact:
