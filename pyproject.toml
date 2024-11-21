@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "interstate"
 version = "0.0.1"
-description = "Hassle free determination of committor functions using E(3)-equivariant gtaph neural networks."
+description = "Hassle free determination of committor functions using E(3)-equivariant graph neural networks."
 authors=[
     {name="Killian Sheriff", email="ksheriff@mit.edu"},
 ]

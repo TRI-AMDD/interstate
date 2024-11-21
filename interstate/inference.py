@@ -1,5 +1,5 @@
 import os
-
+import time
 import numpy as np
 import torch
 from interstate.dataset import OvitoDataset
@@ -35,6 +35,7 @@ def per_atom_inference(root, model, filenames):
             num_workers=3,
             shuffle=False,
         )
+        t = time.perf_counter()
         with torch.no_grad():
             i = 0
             for x in datamodule.val_dataloader():
@@ -46,7 +47,8 @@ def per_atom_inference(root, model, filenames):
                 preds, cvs = model(graph)
                 preds = preds.cpu().numpy()
                 cvs = cvs.cpu().numpy()
-
+            print(t-time.perf_counter())
+            # breakpoint()
             pipeline = import_file(filename)
             data = pipeline.compute(0)
             comm = preds.squeeze()

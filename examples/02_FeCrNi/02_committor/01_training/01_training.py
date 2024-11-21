@@ -40,7 +40,7 @@ def main():
     model = Committor(
         layers=[dim_out_feat, 32, 32, 1],
         mass=atomic_masses,
-        alpha=1e-1,  # 1e-1, 1.0
+        alpha=1.0,  # 1e-1, 1.0
         delta_f=0.1,
         batch_size=BATCH_SIZE,
         epsilon=(

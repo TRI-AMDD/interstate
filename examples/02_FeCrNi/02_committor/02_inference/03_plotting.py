@@ -17,26 +17,27 @@ for data, steps in zip(datas, stepss):
     ptm = np.load(f"data/solid_fractions/{data}/frac_of_solid.npy")
 
     fig, ax = plt.subplots()
-    ax.plot(steps * 0.002 / 1000, ptm, ":d", label="PTM (heuristic classifier)", color="k")
-    ax.plot(
-        steps * 0.002 / 1000, classifier, "-s", label="$L= L_d$ (ML classifier)", color="k"
-    )
+    ax.plot(steps * 0.002 / 1000, ptm, ":d", label="Fraction of solid atoms", color="g") #from PTM (heuristic classifier)"
+    # ax.plot(
+    #     steps * 0.002 / 1000, classifier, "-s", label=r"$\mathcal{L}= L_b$ (ML classifier)", color="k"
+    # )
     ax.plot(
         steps * 0.002 / 1000,
         committor,
         "-o",
-        label="$L = L_d+L_j$ (our work)",
+        # label=r"$\mathcal{L} = \mathcal{L}_v+\alpha \mathcal{L}_b$ (our work)",
+        label=r"E(3)-Committor (our work)",
         color="#8a0329",
         zorder=999,
     )
-    ax.fill_between(
-        steps * 0.002 / 1000,
-        0.45,
-        0.55,
-        alpha=0.3,
-        color="#8a0329",
-        label=r" TSE $q \in [0.45,0.55]$",
-    )  #
+    # ax.fill_between(
+    #     steps * 0.002 / 1000,
+    #     0.45,
+    #     0.55,
+    #     alpha=0.3,
+    #     color="#8a0329",
+    #     label=r" TSE $q \in [0.45,0.55]$",
+    # )  #
 
     # ax.axhline(y=0.5, ls='--', color='k')
 
@@ -69,4 +70,30 @@ for data, steps in zip(datas, stepss):
     cbar.ax.set_ylabel('Time (ns)', rotation=270, labelpad=20)
     fig.savefig(f'figures/{data}_dicovered_collective_variables_committor.pdf')
 
-   
+
+# Plot committor 
+for data, steps in zip(datas, stepss):
+    classifier = np.load(f"data/classifier/{data}/committor.npy")
+    committor = np.load(f"data/committor/{data}/committor.npy")
+
+    ptm = np.load(f"data/solid_fractions/{data}/frac_of_solid.npy")
+
+    fig, ax = plt.subplots(figsize=(3.5*1.6, 2.69))
+    ax.plot(steps * 0.002 / 1000, ptm, ":d", label="Fraction of solid atoms", color="b")
+    ax.plot(
+        steps * 0.002 / 1000,
+        committor,
+        "-o",
+        label="Our work",
+        color="#8a0329",
+        zorder=999,
+    )
+    
+
+    # ax.axhline(y=0.5, ls='--', color='k')
+
+    ax.set_xlabel("Time (ns)")
+    ax.set_ylabel(r"Committor $q$")
+
+    ax.legend(loc="best", frameon=True)
+    fig.savefig(f"figures/{data}_committor_and_solid_atoms.pdf")
